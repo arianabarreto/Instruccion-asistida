@@ -1,24 +1,111 @@
-# Compiled class file
-*.class
+import java.util.Scanner;
+import java.security.SecureRandom;
 
-# Log file
-*.log
+public class ProgramaAritmetico {
 
-# BlueJ files
-*.ctxt
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        SecureRandom random = new SecureRandom();
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+        int correctAnswers = 0;
+        int totalQuestions = 0;
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+        System.out.println("Bienvenido al Programa de Instrucción Aritmética.");
+        System.out.println("Por favor, elige el nivel de dificultad:");
+        System.out.println("1. Números de un dígito");
+        System.out.println("2. Números de dos dígitos");
+        int difficultyLevel = scanner.nextInt();
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+        System.out.println("Elige el tipo de problema aritmético:");
+        System.out.println("1. Suma");
+        System.out.println("2. Resta");
+        System.out.println("3. Multiplicación");
+        System.out.println("4. División");
+        System.out.println("5. Mezcla aleatoria");
+        int arithmeticType = scanner.nextInt();
+
+        while (correctAnswers < 10) {
+            int num1 = generateNumber(difficultyLevel);
+            int num2 = generateNumber(difficultyLevel);
+            String operator = getOperator(arithmeticType);
+
+            int correctAnswer = calculateAnswer(num1, num2, operator);
+            int userAnswer = askQuestion(num1, num2, operator);
+
+            if (userAnswer == correctAnswer) {
+                String positiveFeedback = getPositiveFeedback();
+                System.out.println(positiveFeedback);
+                correctAnswers++;
+            } else {
+                String negativeFeedback = getNegativeFeedback();
+                System.out.println(negativeFeedback);
+            }
+
+            totalQuestions++;
+        }
+
+        double percentageCorrect = (double) correctAnswers / totalQuestions * 100;
+
+        if (percentageCorrect < 75) {
+            System.out.println("Por favor, pide ayuda adicional a tu instructor.");
+        } else {
+            System.out.println("Felicidades, estás listo para pasar al siguiente nivel!");
+        }
+    }
+
+    public static int generateNumber(int level) {
+        SecureRandom random = new SecureRandom();
+        int maxRange = (int) Math.pow(10, level);
+        return random.nextInt(maxRange);
+    }
+
+    public static String getOperator(int type) {
+        switch (type) {
+            case 1:
+                return "+";
+            case 2:
+                return "-";
+            case 3:
+                return "*";
+            case 4:
+                return "/";
+            default:
+                String[] operators = {"+", "-", "*", "/"};
+                int index = new SecureRandom().nextInt(operators.length);
+                return operators[index];
+        }
+    }
+
+    public static int calculateAnswer(int num1, int num2, String operator) {
+        switch (operator) {
+            case "+":
+                return num1 + num2;
+            case "-":
+                return num1 - num2;
+            case "*":
+                return num1 * num2;
+            case "/":
+                return num1 / num2;
+            default:
+                return 0;
+        }
+    }
+
+    public static int askQuestion(int num1, int num2, String operator) {
+        System.out.printf("¿Cuánto es %d %s %d? ", num1, operator, num2);
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+    public static String getPositiveFeedback() {
+        String[] feedback = {"¡Muy bien!", "¡Excelente!", "¡Buen trabajo!", "¡Sigue así!"};
+        int index = new SecureRandom().nextInt(feedback.length);
+        return feedback[index];
+    }
+
+    public static String getNegativeFeedback() {
+        String[] feedback = {"No. Por favor intenta de nuevo.", "Incorrecto. Intenta una vez más.", "¡No te rindas!", "No. Sigue intentando."};
+        int index = new SecureRandom().nextInt(feedback.length);
+        return feedback[index];
+    }
+}
